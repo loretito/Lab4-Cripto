@@ -20,14 +20,16 @@ def process_data(option, data):
             encrypted_data.append((encrypted, key_out, iv_out, algorithm, key_size, iv_size))
 
     else:
-        print("\n\033[35m\n === CIFRADO ===\033[0m\n")
-        print(f"\n\033[34mTexto original:\033[0m {data}")
         
         keys_iv = {}
         
         for algorithm, key_size, iv_size in algorithms:
             key, iv = input_key_iv(algorithm)
             keys_iv[algorithm] = (key, iv)
+            print("\n")    
+
+        print("\n\033[35m\n === CIFRADO ===\033[0m\n")
+        print(f"\n\033[34mTexto original:\033[0m {data}")
 
         for algorithm, key_size, iv_size in algorithms:
             key, iv = keys_iv[algorithm]

@@ -1,4 +1,4 @@
-import secrets
+import secrets, string
 
 from functions.encrypt_decrypt import encrypt, decrypt
 
@@ -12,20 +12,18 @@ def print_message(m, size, key, new_key, type):
 
 def adjust_key(key, size, type):
     if len(key) < size:
-        random_padding = secrets.token_bytes(size - len(key))
-        new_key = key + random_padding
+        random_padding = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(size - len(key)))
+        new_key = (key + random_padding.encode('utf-8'))[:size]  
         print_message("menor", size, key, new_key, type)
 
-        return new_key
-    
     elif len(key) > size:
         new_key = key[:size]
         print_message("mayor", size, key, new_key, type)
-
-        return new_key
     
-    return key
-
+    else:
+        new_key = key
+    
+    return new_key
 
 def input_key_iv(type=""):
     key = input(f"Llave {type}: ").encode()
