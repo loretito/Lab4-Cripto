@@ -8,7 +8,7 @@ def process_data(option, data):
     ]
 
     encrypted_data = []
-    
+
     if option == "s":
         key, iv = input_key_iv("Todos los algoritmos")
         
@@ -23,8 +23,14 @@ def process_data(option, data):
         print("\n\033[35m\n === CIFRADO ===\033[0m\n")
         print(f"\n\033[34mTexto original:\033[0m {data}")
         
+        keys_iv = {}
+        
         for algorithm, key_size, iv_size in algorithms:
             key, iv = input_key_iv(algorithm)
+            keys_iv[algorithm] = (key, iv)
+
+        for algorithm, key_size, iv_size in algorithms:
+            key, iv = keys_iv[algorithm]
             encrypted, key_out, iv_out = encrypt_and_print(data, key, iv, algorithm, key_size, iv_size)
             encrypted_data.append((encrypted, key_out, iv_out, algorithm, key_size, iv_size))
 
