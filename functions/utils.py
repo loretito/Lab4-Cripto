@@ -48,9 +48,6 @@ def encrypt(data, key, iv, algorithm="DES"):
     return encoded_cipher_text.decode('utf-8')
 
 
-data = b"hola" # Texto a encriptar
-aes_key = b"HolaMeGustaJugarStardewValley123"  # AES key (32 bytes for AES-256)
-des_key = b"12345678"                         # DES key (8 bytes)
-triple_des_key = b"12345678abcdefghABCDEFGH"  # Clave de 3DES válida de 24 bytes  # 3DES key (24 bytes)
-iv = b"26S7eBSuDYedBQUM"  
-
+def encrypt_and_print(data, key, iv, algorithm, key_size, iv_size):
+    print(f"\n\033[33m== {algorithm} ==\033[0m")
+    print(f"\033[34mTexto cifrado {algorithm}:\033[0m", encrypt(data, adjust_key(key, key_size, "Llave"), adjust_key(iv, iv_size, "IV"), algorithm))
