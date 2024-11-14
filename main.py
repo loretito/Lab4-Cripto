@@ -1,35 +1,49 @@
-from functions.utils import encrypt_and_print
+from functions.utils import encrypt_and_print, decrypt_and_print, input_key_iv
 
-print("Utilizar la misma llave/IV para todos los algoritmos? (s/n)")
-while True:
-    option = input("s/n: ").lower()
-    if option in ["s", "n"]:
-        break
-    print("Opción no válida.")
+def process_data(option, data):
+    algorithms = [
+        ("AES", 32, 16),
+        ("DES", 8, 8),
+        ("3DES", 24, 8)
+    ]
 
+    encrypted_data = []
+    
+    if option == "s":
+        key, iv = input_key_iv("Todos los algoritmos")
+        
+        print("\n\033[35m === CIFRADO ===\033[0m")
+        print("\n\033[34mTexto original:\033[0m", data)
+        
+        for algorithm, key_size, iv_size in algorithms:
+            encrypted, key_out, iv_out = encrypt_and_print(data, key, iv, algorithm, key_size, iv_size)
+            encrypted_data.append((encrypted, key_out, iv_out, algorithm, key_size, iv_size))
 
-data = input("\nTexto a encriptar: ").encode()
+    else:
+        print("\n\033[35m === CIFRADO ===\033[0m")
+        print(f"\n\033[34mTexto original:\033[0m {data}")
+        
+        for algorithm, key_size, iv_size in algorithms:
+            key, iv = input_key_iv(algorithm)
+            encrypted, key_out, iv_out = encrypt_and_print(data, key, iv, algorithm, key_size, iv_size)
+            encrypted_data.append((encrypted, key_out, iv_out, algorithm, key_size, iv_size))
 
-if option == "s":
-    key = input("Llave: ").encode()
-    iv = input("IV: ").encode()
+    print("\n\033[35m === DESCIFRADO ===\033[0m")
+    for encrypted, key_out, iv_out, algorithm, key_size, iv_size in encrypted_data:
+        decrypt_and_print(encrypted, key_out, iv_out, algorithm, key_size, iv_size)
 
-    print("\n\033[34mTexto original:\033[0m", data)
-    encrypt_and_print(data, key, iv, "AES", 32, 16)
-    encrypt_and_print(data, key, iv, "DES", 8, 8)
-    encrypt_and_print(data, key, iv, "3DES", 24, 8)
+def main():
+    print("\n\033[35m== CIFRADO Y DESCIFRADO ==\033[0m\n\n")
 
-else: 
-    key_aes = input("Llave AES: ").encode()
-    iv_aes = input("IV AES: ").encode()
+    print("Utilizar la misma llave/IV para todos los algoritmos? (s/n)")
+    while True:
+        option = input("s/n: ").lower()
+        if option in ["s", "n"]:
+            break
+        print("Opción no válida.")
 
-    key_des = input("Llave DES: ").encode()
-    iv_des = input("IV DES: ").encode()
+    data = input("\nTexto a encriptar: ").encode()
+    process_data(option, data)
 
-    key_3des = input("Llave 3DES: ").encode()
-    iv_3des = input("IV 3DES: ").encode()
-
-    print(f"\n\033[34mTexto original:\033[0m {data}")
-    encrypt_and_print(data, key_aes, iv_aes, "AES", 32, 16)
-    encrypt_and_print(data, key_des, iv_des, "DES", 8, 8)
-    encrypt_and_print(data, key_3des, iv_3des, "3DES", 24, 8)
+if __name__ == "__main__":
+    main()

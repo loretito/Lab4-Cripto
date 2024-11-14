@@ -1,7 +1,6 @@
-from Crypto.Cipher import AES, DES, DES3
-from Crypto.Util.Padding import pad
 import secrets
-import base64
+
+from functions.encrypt_decrypt import encrypt, decrypt
 
 def print_message(m, size, key, new_key, type):
     adj = "se utilizará un random padding" if m == "menor" else "se truncará"
@@ -28,26 +27,30 @@ def adjust_key(key, size, type):
     return key
 
 
-def encrypt(data, key, iv, algorithm="DES"):
-    if algorithm == "AES":
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        cipher_text = cipher.encrypt(pad(data, AES.block_size))
+def input_key_iv(type=""):
+    key = input(f"Llave {type}: ").encode()
+    iv = input(f"IV {type}: ").encode()
 
-    elif algorithm == "DES":
-        cipher = DES.new(key, DES.MODE_CBC, iv)
-        cipher_text = cipher.encrypt(pad(data, DES.block_size))
-
-    elif algorithm == "3DES":
-        cipher = DES3.new(key, DES3.MODE_CBC, iv)
-        cipher_text = cipher.encrypt(pad(data, DES3.block_size))    
-
-    else:
-        raise ValueError("daf")
-    
-    encoded_cipher_text = base64.b64encode(cipher_text)
-    return encoded_cipher_text.decode('utf-8')
+    return key, iv
 
 
 def encrypt_and_print(data, key, iv, algorithm, key_size, iv_size):
     print(f"\n\033[33m== {algorithm} ==\033[0m")
-    print(f"\033[34mTexto cifrado {algorithm}:\033[0m", encrypt(data, adjust_key(key, key_size, "Llave"), adjust_key(iv, iv_size, "IV"), algorithm))
+    adj_key = adjust_key(key, key_size, "Llave")
+    adj_IV = adjust_key(iv, iv_size, "IV")
+
+    encoded_text = encrypt(data, adj_key, adj_IV, algorithm)
+    print(f"\033[34mTexto cifrado {algorithm}:\033[0m", encoded_text)
+
+    return encoded_text, adj_key, adj_IV
+
+
+def decrypt_and_print(encoded_cipher_text, key, iv, algorithm, key_size, iv_size):
+    print(f"\n\033[33m== {algorithm} (Descifrado) ==\033[0m")
+
+    print(f"Texto cifrado: {encoded_cipher_text}")
+    print(f"Llave: {key}")
+    print(f"IV: {iv}\n")
+
+    decrypted_text = decrypt(encoded_cipher_text, adjust_key(key, key_size, "Llave"), adjust_key(iv, iv_size, "IV"), algorithm)
+    print(f"\033[34mTexto descifrado {algorithm}:\033[0m", decrypted_text) 
