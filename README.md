@@ -1,13 +1,21 @@
 # Laboratorio 4 - Criptografía y Seguridad en Redes
 
-By: Loreto Ñancucheo 
+By: Loreto Ñancucheo
 
+Este código implementa algoritmos de cifrado y descifrado utilizando **AES**, **DES** y **3DES**. 
+
+## Funcionalidades
+
+El programa permite elegir entre dos opciones para la configuración de la clave (key) y el vector de inicialización (IV):
+
+- **"s"**: Utiliza la misma clave e IV para todos los algoritmos.
+- **"n"**: Utiliza una clave e IV diferentes para cada algoritmo.
 
 ## Uso
 
-Se puede seleccionar s si se desea utilizar la misma llave e IV para todos los algoritmos, o n si se desea utilizar una llave e IV diferente para cada algoritmo.
+Para ejecutar el código, usa el siguiente comando:
 
-Uso:
 ```bash
-python3 main.py 
+python3 main.py
 ```
+
